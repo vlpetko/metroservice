@@ -11,7 +11,7 @@ public class DataBaseConfig {
     @Bean
     CommandLineRunner initDataBase(MosDataApiClient client) {
         return args -> {
-            client.getDataFromOpenSource();
+            client.getAndSaveData();
         };
     }
 }
