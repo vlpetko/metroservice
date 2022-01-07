@@ -11,7 +11,7 @@ import javax.persistence.*;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "metro_line_unit")
+@Table(name = "lines")
 public class MetroLineUnit {
 
     @Id
