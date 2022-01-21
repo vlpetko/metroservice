@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Data
 @Entity
@@ -28,4 +29,18 @@ public class MetroLine {
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "unit_id")
     private MetroLineUnit metroLineUnit;
+
+    @OneToMany(mappedBy = "metroLine", cascade = CascadeType.ALL)
+    List<Station> stations;
+
+    @Override
+    public String toString() {
+        return "MetroLine{" +
+                "lineId=" + lineId +
+                ", line='" + line + '\'' +
+                ", numberOfStations=" + numberOfStations +
+                ", metroLineLength=" + metroLineLength +
+                ", numberOfCarriages=" + numberOfCarriages +
+                '}';
+    }
 }
