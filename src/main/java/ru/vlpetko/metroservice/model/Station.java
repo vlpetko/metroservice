@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.util.List;
 
 @Data
@@ -20,9 +21,9 @@ public class Station {
 
     private String line;
 
-    private int year;
+    private LocalDate year;
 
-    private String quarter;
+    private int quarter;
 
     private int incomingPassengers;
 
@@ -39,7 +40,7 @@ public class Station {
                 "stationId=" + stationId +
                 ", line='" + line + '\'' +
                 ", year=" + year +
-                ", quarter='" + quarter + '\'' +
+                ", quarter=" + quarter +
                 ", incomingPassengers=" + incomingPassengers +
                 ", outgoingPassengers=" + outgoingPassengers +
                 '}';

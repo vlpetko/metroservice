@@ -18,8 +18,11 @@ import javax.transaction.Transactional;
 import java.io.IOException;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -33,6 +36,10 @@ public class MosDataApiClient {
     String apiStationUrl;
 
     private final MetroLineUnitRepository metroLineUnitRepository;
+
+    private final Map <String, Integer> quarters = new HashMap<>();
+
+    String filter = "&$filter=Cells/Line";
 
     @Transactional
     public void getAndSaveData() {
@@ -80,15 +87,15 @@ public class MosDataApiClient {
         try{
             String enc = URLEncoder.encode(param, "UTF-8").replace("+", "%20");
             ObjectMapper mapper = new ObjectMapper();
-            resultJson = mapper.readValue(new URL(apiStationUrl + enc),
+            resultJson = mapper.readValue(new URL(apiStationUrl + apiKey + filter + enc),
                     new TypeReference<>() {
                     });
             for (MetroStationUnitDto unitDtoJson: resultJson) {
                 Station station = new Station();
                 StationDto stationDto = unitDtoJson.getStationDto();
                 station.setLine(stationDto.getLine());
-                station.setYear(stationDto.getYear());
-                station.setQuarter(stationDto.getQuarter());
+                station.setYear(convertIntToDate(stationDto.getYear()));
+                station.setQuarter(getIntQuarter(stationDto.getQuarter()));
                 station.setIncomingPassengers(stationDto.getIncomingPassengers());
                 station.setOutgoingPassengers(stationDto.getOutgoingPassengers());
                 station.setMetroLine(metroLine);
@@ -101,5 +108,18 @@ public class MosDataApiClient {
             e.printStackTrace();
         }
         return result;
+    }
+
+    private int getIntQuarter(String quarterNumber){
+        quarters.put("I квартал",1);
+        quarters.put("II квартал",2);
+        quarters.put("III квартал",3);
+        quarters.put("IV квартал",4);
+        return quarters.get(quarterNumber);
+    }
+
+    private LocalDate convertIntToDate(int year){
+        LocalDate date = LocalDate.of(year,1,1);
+        return date;
     }
 }

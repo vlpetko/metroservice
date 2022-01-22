@@ -21,10 +21,10 @@ databaseChangeLog:
                   type: varchar(100)
               - column:
                   name: year
-                  type: int
+                  type: timestamp without time zone
               - column:
                   name: quarter
-                  type: varchar(100)
+                  type: int
               - column:
                   name: incoming_passengers
                   type: int
