@@ -1,0 +1,39 @@
+databaseChangeLog:
+  - preConditions:
+      - runningAs:
+          username: postgres
+
+  - changeSet:
+      id: 2
+      author: vlpetko
+      changes:
+        - createTable:
+            tableName: STATIONS
+            columns:
+              - column:
+                  name: station_id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: line
+                  type: varchar(100)
+              - column:
+                  name: year
+                  type: timestamp without time zone
+              - column:
+                  name: quarter
+                  type: int
+              - column:
+                  name: incoming_passengers
+                  type: int
+              - column:
+                  name: outgoing_passengers
+                  type: int
+              - column:
+                  name: line_id
+                  type: int
+                  constraints:
+                    references: METRO_LINE(line_id)
+                    foreignKeyName: fk_metro_line

@@ -23,4 +23,12 @@ public class MetroLineUnit {
     @OneToOne(mappedBy = "metroLineUnit", cascade = CascadeType.ALL)
     private MetroLine metroLine;
 
+    @Override
+    public String toString() {
+        return "MetroLineUnit{" +
+                "unitId=" + unitId +
+                ", number=" + number +
+                ", metroLine=" + metroLine +
+                '}';
+    }
 }
