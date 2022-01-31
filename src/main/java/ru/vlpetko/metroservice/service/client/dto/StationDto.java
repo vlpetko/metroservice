@@ -31,14 +31,14 @@ public class StationDto {
 
     @Override
     public String toString() {
-        return "StationDto{" +
-                "nameOfStation='" + nameOfStation + '\'' +
-                ", line='" + line + '\'' +
-                ", year=" + year +
-                ", quarter='" + quarter + '\'' +
-                ", incomingPassengers=" + incomingPassengers +
-                ", outgoingPassengers=" + outgoingPassengers +
-                ", globalId=" + globalId +
-                '}';
+        return "StationDto{"
+                + "nameOfStation='" + nameOfStation + '\''
+                + ", line='" + line + '\''
+                + ", year=" + year
+                + ", quarter='" + quarter + '\''
+                + ", incomingPassengers=" + incomingPassengers
+                + ", outgoingPassengers=" + outgoingPassengers
+                + ", globalId=" + globalId
+                + '}';
     }
 }
