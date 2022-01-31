@@ -25,10 +25,10 @@ public class MetroLineUnit {
 
     @Override
     public String toString() {
-        return "MetroLineUnit{" +
-                "unitId=" + unitId +
-                ", number=" + number +
-                ", metroLine=" + metroLine +
-                '}';
+        return "MetroLineUnit{"
+                + "unitId=" + unitId
+                + ", number=" + number
+                + ", metroLine=" + metroLine
+                + '}';
     }
 }

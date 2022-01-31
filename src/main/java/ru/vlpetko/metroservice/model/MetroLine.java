@@ -35,12 +35,12 @@ public class MetroLine {
 
     @Override
     public String toString() {
-        return "MetroLine{" +
-                "lineId=" + lineId +
-                ", line='" + line + '\'' +
-                ", numberOfStations=" + numberOfStations +
-                ", metroLineLength=" + metroLineLength +
-                ", numberOfCarriages=" + numberOfCarriages +
-                '}';
+        return "MetroLine{"
+                + "lineId=" + lineId
+                + ", line='" + line + '\''
+                + ", numberOfStations=" + numberOfStations
+                + ", metroLineLength=" + metroLineLength
+                + ", numberOfCarriages=" + numberOfCarriages
+                + '}';
     }
 }

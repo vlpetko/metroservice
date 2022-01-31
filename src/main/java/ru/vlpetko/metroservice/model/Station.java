@@ -36,13 +36,13 @@ public class Station {
 
     @Override
     public String toString() {
-        return "Station{" +
-                "stationId=" + stationId +
-                ", line='" + line + '\'' +
-                ", year=" + year +
-                ", quarter=" + quarter +
-                ", incomingPassengers=" + incomingPassengers +
-                ", outgoingPassengers=" + outgoingPassengers +
-                '}';
+        return "Station{"
+                + "stationId=" + stationId
+                + ", line='" + line + '\''
+                + ", year=" + year
+                + ", quarter=" + quarter
+                + ", incomingPassengers=" + incomingPassengers
+                + ", outgoingPassengers=" + outgoingPassengers
+                + '}';
     }
 }

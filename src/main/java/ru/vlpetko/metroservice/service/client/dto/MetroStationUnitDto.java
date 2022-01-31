@@ -19,10 +19,10 @@ public class MetroStationUnitDto {
 
     @Override
     public String toString() {
-        return "MetroStationUnitDto{" +
-                "globalId=" + globalId +
-                ", number=" + number +
-                ", stationDto=" + stationDto +
-                '}';
+        return "MetroStationUnitDto{"
+                + "globalId=" + globalId
+                + ", number=" + number
+                + ", stationDto=" + stationDto
+                + '}';
     }
 }

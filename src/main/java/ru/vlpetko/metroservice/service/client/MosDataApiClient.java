@@ -1,31 +1,28 @@
 package ru.vlpetko.metroservice.service.client;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.*;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
+import ru.vlpetko.metroservice.mapper.MetroLineUnitMapper;
+import ru.vlpetko.metroservice.mapper.MetroStationMapper;
 import ru.vlpetko.metroservice.model.MetroLine;
 import ru.vlpetko.metroservice.model.MetroLineUnit;
 import ru.vlpetko.metroservice.model.Station;
 import ru.vlpetko.metroservice.repository.MetroLineUnitRepository;
-import ru.vlpetko.metroservice.service.client.dto.MetroLineDto;
 import ru.vlpetko.metroservice.service.client.dto.MetroLineUnitDtoJson;
 import ru.vlpetko.metroservice.service.client.dto.MetroStationUnitDto;
 import ru.vlpetko.metroservice.service.client.dto.StationDto;
 
 import javax.transaction.Transactional;
-import java.io.IOException;
-import java.net.URL;
-import java.net.URLEncoder;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class MosDataApiClient {
 
     @Value("${apiLineUrl}")
@@ -35,91 +32,83 @@ public class MosDataApiClient {
     @Value("${apiStationUrl}")
     String apiStationUrl;
 
+    private final RestTemplate restTemplate;
+
     private final MetroLineUnitRepository metroLineUnitRepository;
 
-    private final Map <String, Integer> quarters = new HashMap<>();
-
-    String filter = "&$filter=Cells/Line";
+    final static String FILTER = "&$filter=Cells/Line";
 
     @Transactional
     public void getAndSaveData() {
-        List<MetroLineUnit> data = getDataFromOpenSource();
-        for (MetroLineUnit unit: data
-             ) {
-            metroLineUnitRepository.save(unit);
-        }
+        getDataFromOpenSource().forEach(metroLineUnitRepository::save);
     }
 
+    /**
+     * Метод осуществляет получение данных по заданному URL путем конвертации JSON в Entity
+     *
+     * @param
+     * @return List<MetroStation>
+     * @throws
+     */
     public List<MetroLineUnit> getDataFromOpenSource() {
         List<MetroLineUnitDtoJson> resultJson;
         List<MetroLineUnit> result = new ArrayList<>();
-        try {
-            ObjectMapper mapper = new ObjectMapper();
-            resultJson = mapper.readValue(
-                    new URL(apiLineUrl + apiKey),
-                    new TypeReference<>() {
-                    });
-            for (MetroLineUnitDtoJson unitDtoJson: resultJson) {
-                MetroLineUnit unit = new MetroLineUnit();
-                unit.setNumber(unitDtoJson.getNumber());
-                MetroLine metroLine = new MetroLine();
-                MetroLineDto lineDto = unitDtoJson.getMetroLineDto();
-                metroLine.setLine(lineDto.getLine());
-                metroLine.setNumberOfStations(lineDto.getNumberOfStations());
-                metroLine.setMetroLineLength(lineDto.getMetroLineLength());
-                metroLine.setNumberOfCarriages(lineDto.getNumberOfCarriages());
+
+        HttpHeaders headers = new HttpHeaders();
+        HttpEntity<String> entity = new HttpEntity<>(headers);
+        log.info("lineUrl: " + apiLineUrl + apiKey);
+        ResponseEntity<MetroLineUnitDtoJson[]> responseEntity =
+                restTemplate.exchange(apiLineUrl + apiKey, HttpMethod.GET, entity,
+                        MetroLineUnitDtoJson[].class);
+
+        log.info("server status: " + responseEntity.getStatusCode());
+        if(responseEntity.getStatusCode() == HttpStatus.valueOf(200)) {
+
+            resultJson = List.of(Objects.requireNonNull(responseEntity.getBody()));
+            for (MetroLineUnitDtoJson unitDtoJson : resultJson) {
+                MetroLineUnit unit = MetroLineUnitMapper.INSTANCE.mapToMetroLineUnit(unitDtoJson);
+                MetroLine metroLine = unit.getMetroLine();
                 metroLine.setStations(getStationUnit(metroLine));
                 metroLine.setMetroLineUnit(unit);
                 unit.setMetroLine(metroLine);
                 result.add(unit);
-                System.out.println(metroLine);
+                System.out.println(unit);
             }
-        } catch (IOException e) {
-            e.printStackTrace();
         }
         return result;
-
     }
-    public List<Station> getStationUnit(MetroLine metroLine){
+
+    /**
+     * Метод осуществляет получение данных по заданному URL путем конвертации JSON в Entity
+     *
+     * @param  metroLine
+     * @return List<Station>
+     * @throws
+     */
+    public List<Station> getStationUnit(MetroLine metroLine) {
         List<MetroStationUnitDto> resultJson;
         List<Station> result = new ArrayList<>();
-        String param = " eq " + "\'" + metroLine.getLine() + "\'";
-        try{
-            String enc = URLEncoder.encode(param, "UTF-8").replace("+", "%20");
-            ObjectMapper mapper = new ObjectMapper();
-            resultJson = mapper.readValue(new URL(apiStationUrl + apiKey + filter + enc),
-                    new TypeReference<>() {
-                    });
-            for (MetroStationUnitDto unitDtoJson: resultJson) {
-                Station station = new Station();
-                StationDto stationDto = unitDtoJson.getStationDto();
-                station.setLine(stationDto.getLine());
-                station.setYear(convertIntToDate(stationDto.getYear()));
-                station.setQuarter(getIntQuarter(stationDto.getQuarter()));
-                station.setIncomingPassengers(stationDto.getIncomingPassengers());
-                station.setOutgoingPassengers(stationDto.getOutgoingPassengers());
+        String param = " eq " + "/'" + metroLine.getLine() + "/'";
+
+        HttpHeaders headers = new HttpHeaders();
+        HttpEntity<String> entity = new HttpEntity<>(headers);
+        log.info("stationUrl: " + apiStationUrl + apiKey + FILTER + param);
+        ResponseEntity<MetroStationUnitDto[]> responseEntity = restTemplate.exchange(apiStationUrl + apiKey + FILTER
+                + param, HttpMethod.GET, entity, MetroStationUnitDto[].class);
+        resultJson = List.of(Objects.requireNonNull(responseEntity.getBody()));
+
+        log.info("server status: " + responseEntity.getStatusCode());
+        if(responseEntity.getStatusCode() == HttpStatus.valueOf(200)) {
+
+            for (MetroStationUnitDto unitDto : resultJson) {
+                StationDto stationDto = unitDto.getStationDto();
+                Station station = MetroStationMapper.INSTANCE.mapToStation(stationDto);
                 station.setMetroLine(metroLine);
-                if(station.getLine().equals(metroLine.getLine())){
+                if (station.getLine().equals(metroLine.getLine())) {
                     result.add(station);
-                    System.out.println(station);
                 }
             }
-        } catch (IOException e) {
-            e.printStackTrace();
         }
         return result;
-    }
-
-    private int getIntQuarter(String quarterNumber){
-        quarters.put("I квартал",1);
-        quarters.put("II квартал",2);
-        quarters.put("III квартал",3);
-        quarters.put("IV квартал",4);
-        return quarters.get(quarterNumber);
-    }
-
-    private LocalDate convertIntToDate(int year){
-        LocalDate date = LocalDate.of(year,1,1);
-        return date;
     }
 }
