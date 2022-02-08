@@ -17,8 +17,9 @@ import ru.vlpetko.metroservice.service.client.dto.MetroStationUnitDto;
 import ru.vlpetko.metroservice.service.client.dto.StationDto;
 
 import javax.transaction.Transactional;
-import java.time.LocalDate;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -62,7 +63,7 @@ public class MosDataApiClient {
                         MetroLineUnitDtoJson[].class);
 
         log.info("server status: " + responseEntity.getStatusCode());
-        if(responseEntity.getStatusCode() == HttpStatus.valueOf(200)) {
+        if (responseEntity.getStatusCode() == HttpStatus.valueOf(200)) {
 
             resultJson = List.of(Objects.requireNonNull(responseEntity.getBody()));
             for (MetroLineUnitDtoJson unitDtoJson : resultJson) {
@@ -98,7 +99,7 @@ public class MosDataApiClient {
         resultJson = List.of(Objects.requireNonNull(responseEntity.getBody()));
 
         log.info("server status: " + responseEntity.getStatusCode());
-        if(responseEntity.getStatusCode() == HttpStatus.valueOf(200)) {
+        if (responseEntity.getStatusCode() == HttpStatus.valueOf(200)) {
 
             for (MetroStationUnitDto unitDto : resultJson) {
                 StationDto stationDto = unitDto.getStationDto();

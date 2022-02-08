@@ -3,3 +3,5 @@ databaseChangeLog:
      file: db/changelog/changes/20220107213000_create_main_table.yaml
   - include:
      file: db/changelog/changes/20220112140000_create_station_table.yaml
+  - include:
+     file: db/changelog/changes/20220208184500_add_column_name_of_station.yaml

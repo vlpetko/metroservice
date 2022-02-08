@@ -19,6 +19,8 @@ public class Station {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int stationId;
 
+    private String nameOfStation;
+
     private String line;
 
     private LocalDate year;
