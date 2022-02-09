@@ -27,13 +27,16 @@ export const eventBus = new Vue();
 
 library.add(faHome, faUser, faUserPlus, faSignInAlt, faSignOutAlt);
 
-Vue.use(VeeValidate, { inject: 'false' });
 Vue.component('font-awesome-icon', FontAwesomeIcon);
 
 Vue.use(BootstrapVue)
 Vue.use(IconsPlugin)
 Vue.config.productionTip = false
 
+Vue.use(VeeValidate, {
+  inject: true,
+  fieldsBagName: 'veeFields'
+});
 
 
 new Vue({
