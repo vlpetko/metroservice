@@ -2,6 +2,8 @@ apiLineUrl: https://apidata.mos.ru/v1/datasets/62741/rows?api_key=
 apiKey: df8787bec7aa55f770b7b6d306c0bb17
 apiStationUrl: https://apidata.mos.ru/v1/datasets/62743/rows?api_key=
 
+server:
+  port: 9090
 spring:
   jpa:
     generate-ddl: false

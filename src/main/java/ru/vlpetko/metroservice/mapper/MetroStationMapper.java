@@ -3,6 +3,7 @@ package ru.vlpetko.metroservice.mapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
+import ru.vlpetko.metroservice.controller.dto.MetroStationDto;
 import ru.vlpetko.metroservice.model.Station;
 import ru.vlpetko.metroservice.service.client.dto.StationDto;
 
@@ -18,6 +19,8 @@ public interface MetroStationMapper {
     @Mapping(source = "year", target = "year", qualifiedByName = "convertIntToDate")
     @Mapping(source = "quarter", target = "quarter", qualifiedByName = "getIntQuarter")
     Station mapToStation(StationDto stationDto);
+
+    MetroStationDto mapToStationDto(Station station);
 
     default int getIntQuarter(String quarterNumber) {
         final Map<String, Integer> quarters = new HashMap<>();
