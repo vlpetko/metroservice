@@ -41,7 +41,7 @@ public class MosDataApiClient {
 
     @Transactional
     public void getAndSaveData() {
-        //   getDataFromOpenSource().forEach(metroLineUnitRepository::save);
+           getDataFromOpenSource().forEach(metroLineUnitRepository::save);
     }
 
     /**
