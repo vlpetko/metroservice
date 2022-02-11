@@ -1,0 +1,48 @@
+databaseChangeLog:
+  - preConditions:
+      - runningAs:
+          username: postgres
+
+  - changeSet:
+      id: 1
+      author: vlpetko
+      changes:
+        - createTable:
+            tableName: LINES
+            columns:
+              - column:
+                  name: unit_id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: number
+                  type: int
+        - createTable:
+            tableName: METRO_LINE
+            columns:
+              - column:
+                  name: line_id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    - primaryKey: true
+              - column:
+                  name: line
+                  type: varchar(100)
+              - column:
+                  name: number_of_stations
+                  type: int
+              - column:
+                  name: metro_line_length
+                  type: double
+              - column:
+                  name: number_of_carriages
+                  type: int
+              - column:
+                  name: unit_id
+                  type: int
+                  constraints:
+                    references: LINES(unit_id)
+                    foreignKeyName: fk_metro_line_unit
