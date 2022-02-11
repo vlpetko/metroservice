@@ -7,7 +7,7 @@ import java.time.LocalDate;
 @Data
 public class MetroStationDto {
 
-    private Long stationId;
+    private Long id;
 
     private String nameOfStation;
 

@@ -20,6 +20,7 @@ public interface MetroStationMapper {
     @Mapping(source = "quarter", target = "quarter", qualifiedByName = "getIntQuarter")
     Station mapToStation(StationDto stationDto);
 
+    @Mapping(source = "stationId", target = "id")
     MetroStationDto mapToStationDto(Station station);
 
     default int getIntQuarter(String quarterNumber) {

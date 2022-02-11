@@ -26,7 +26,7 @@ public class MetroLine {
 
     private int numberOfCarriages;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "unit_id")
     private MetroLineUnit metroLineUnit;
 

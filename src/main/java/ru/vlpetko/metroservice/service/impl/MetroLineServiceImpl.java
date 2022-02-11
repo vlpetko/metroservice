@@ -18,12 +18,18 @@ public class MetroLineServiceImpl implements MetroLineService {
     @Override
     @Transactional
     public List<MetroLine> getAllLines() {
-        return metroLineRepository.findAll();
+        return metroLineRepository.findAllLines();
     }
 
     @Override
     @Transactional
     public MetroLine getLineById(Long lineId) {
-        return metroLineRepository.getById(lineId);
+        return metroLineRepository.getOneLineById(lineId).orElseThrow(() -> new IllegalArgumentException("Линия не найдена: " + lineId));
     }
+
+//    @Override
+//    @Transactional
+//    public MetroLine getLineById(Long lineId) {
+//        return metroLineRepository.findById(lineId).orElseThrow(() -> new IllegalArgumentException("Линия не найдена: " + lineId));
+//    }
 }
