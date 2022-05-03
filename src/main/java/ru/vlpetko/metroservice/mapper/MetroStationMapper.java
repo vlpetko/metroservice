@@ -9,6 +9,7 @@ import ru.vlpetko.metroservice.service.client.dto.StationDto;
 
 import java.time.LocalDate;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Mapper(uses = MetroLineMapper.class)
@@ -22,6 +23,8 @@ public interface MetroStationMapper {
 
     @Mapping(source = "stationId", target = "id")
     MetroStationDto mapToStationDto(Station station);
+
+    List<MetroStationDto> mapToListStationDto(List<Station> stations);
 
     default int getIntQuarter(String quarterNumber) {
         final Map<String, Integer> quarters = new HashMap<>();
