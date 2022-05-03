@@ -41,7 +41,7 @@ public class MosDataApiClient {
 
     @Transactional
     public void getAndSaveData() {
-        getDataFromOpenSource().forEach(metroLineUnitRepository::save);
+        //   getDataFromOpenSource().forEach(metroLineUnitRepository::save);
     }
 
     /**
@@ -82,7 +82,7 @@ public class MosDataApiClient {
     /**
      * Метод осуществляет получение данных по заданному URL путем конвертации JSON в Entity
      *
-     * @param  metroLine
+     * @param metroLine
      * @return List<Station>
      * @throws
      */

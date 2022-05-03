@@ -3,11 +3,13 @@ package ru.vlpetko.metroservice.mapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
+import ru.vlpetko.metroservice.controller.dto.MetroStationDto;
 import ru.vlpetko.metroservice.model.Station;
 import ru.vlpetko.metroservice.service.client.dto.StationDto;
 
 import java.time.LocalDate;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Mapper(uses = MetroLineMapper.class)
@@ -18,6 +20,11 @@ public interface MetroStationMapper {
     @Mapping(source = "year", target = "year", qualifiedByName = "convertIntToDate")
     @Mapping(source = "quarter", target = "quarter", qualifiedByName = "getIntQuarter")
     Station mapToStation(StationDto stationDto);
+
+    @Mapping(source = "stationId", target = "id")
+    MetroStationDto mapToStationDto(Station station);
+
+    List<MetroStationDto> mapToListStationDto(List<Station> stations);
 
     default int getIntQuarter(String quarterNumber) {
         final Map<String, Integer> quarters = new HashMap<>();
